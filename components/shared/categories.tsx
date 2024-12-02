@@ -1,6 +1,9 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { useCategoryStore } from "@/store/category";
 import Link from "next/link";
-import React from "react";
+import React, { MouseEvent, useRef } from "react";
 
 interface Props {
   className?: string;
@@ -16,9 +19,23 @@ const cats = [
   "Десерты",
   "Десерты",
 ];
-const activeIndex = 0;
+
+function customScrollTo(querySelector: string) {
+  return function (e: MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+    const section = document.querySelector(querySelector);
+    if (section) {
+      const topBar = document.querySelector("#topBar") as Element;
+      const { y }: { y: number } = section.getBoundingClientRect();
+      const yCoord: number = y + window.scrollY;
+      window.scrollTo(0, yCoord - topBar.clientHeight);
+    }
+  };
+}
 
 export const Categories: React.FC<Props> = ({ className }) => {
+  const activeCategoryId = useCategoryStore((state) => state.activeId);
+
   return (
     <div
       className={cn(
@@ -31,10 +48,11 @@ export const Categories: React.FC<Props> = ({ className }) => {
           key={i}
           className={cn(
             "flex items-center font-bold h-11 rounded-2xl px-5",
-            activeIndex === i &&
+            activeCategoryId === i + 1 &&
               "bg-white shadow-md shadow-gray-200 text-primary"
           )}
-          href=""
+          href={`#${cats[i]}`}
+          onClick={customScrollTo(`#${cats[i]}`)}
         >
           {cat}
         </Link>
