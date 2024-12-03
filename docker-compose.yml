@@ -1,0 +1,23 @@
+services:
+  postgress:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+  next-pizza:
+    build: ./frontend-react-js
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/next-pizza
+      - /next-pizza/node_modules
+    environment:
+      DATABASE_URL: ""
+volumes:
+  db:
+    driver: local
