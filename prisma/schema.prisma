@@ -13,6 +13,7 @@ model User {
     email     String   @unique
     password  String
     role UserRole @default(USER)
+    verified Boolean @default(false)
 
     provider String?
     providerId String?
@@ -54,7 +55,7 @@ model ProductItem {
     pizzaType Int?
 
     product   Product @relation(fields: [productId], references: [id])
-    productId Int     @unique
+    productId Int
 
     CartItem CartItem[]
 }
@@ -63,7 +64,6 @@ model Ingredient {
     id        Int      @id @default(autoincrement())
     name      String   @unique
     price     Int
-    cartId    Int
     imageUrl  String
     
     createdAt DateTime @default(now())
@@ -152,4 +152,5 @@ enum OrderStatus {
 
 enum UserRole {
     USER
+    ADMIN
 }
