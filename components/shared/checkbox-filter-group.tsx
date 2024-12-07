@@ -20,7 +20,6 @@ type Props = {
 export const CheckboxFilterGroup: React.FC<Props> = ({
   title,
   items,
-  // defaultValues,
   limit = 5,
   searchInputPlaceholder = "Поиск...",
   onChange,

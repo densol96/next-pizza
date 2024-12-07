@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Title,
   FilterCheckbox,
@@ -9,17 +9,19 @@ import {
 import { Input, RangeSlider } from "../ui";
 import { FilterCheckboxProps } from "./filter-checkbox";
 import { cn } from "@/lib/utils";
+import { useIngredients } from "@/hooks/useFilterIngridients";
 type Props = {
   className?: string;
 };
 
 export const Filters: React.FC<Props> = ({ className }) => {
   const [topBarHeight, setTopBarHeight] = useState(0);
-
   useEffect(() => {
     const el = document.querySelector("#topBar") as Element;
     setTopBarHeight(el.clientHeight);
   }, []);
+
+  const ingredients = useIngredients();
 
   return (
     <div
@@ -49,18 +51,10 @@ export const Filters: React.FC<Props> = ({ className }) => {
       </div>
       <CheckboxFilterGroup
         title="Ингредиенты"
-        items={
-          [
-            { text: "One" },
-            { text: "Two" },
-            { text: "Three" },
-            { text: "Four" },
-            { text: "Five" },
-            { text: "Six" },
-            { text: "Seven" },
-            { text: "Eight" },
-          ] as FilterCheckboxProps[]
-        }
+        items={ingredients.map((ingredient) => ({
+          text: ingredient.name,
+          value: ingredient.name,
+        }))}
       />
     </div>
   );
