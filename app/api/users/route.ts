@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
     } catch(e) {
         return NextResponse.json({status: 400, message: "Error happened"});
     }
-    
 }
 
 

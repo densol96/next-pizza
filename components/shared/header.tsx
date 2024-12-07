@@ -4,6 +4,7 @@ import { Container } from "./container";
 import Image from "next/image";
 import { Button } from "../ui";
 import { ArrowRight, ShoppingCart, User } from "lucide-react";
+import { SearchInput } from "./search-input";
 
 type Props = {
   className?: string;
@@ -22,6 +23,7 @@ export const Header: React.FC<Props> = ({ className }) => {
             </p>
           </div>
         </div>
+        <SearchInput />
         <div className="flex gap-2">
           <Button
             className="flex items-center gap-3 hover:text-neutral-50 hover:bg-primary"
