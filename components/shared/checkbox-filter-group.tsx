@@ -6,17 +6,17 @@ import { Button, Input, Skeleton } from "../ui";
 
 type Item = FilterCheckboxProps;
 
-type Props = {
+type Props<T> = {
   title: string;
   items: Item[];
   limit?: number;
   searchInputPlaceholder?: string;
-  onCheckedChange?: (val: any) => (checked: boolean) => void;
+  onCheckedChange: (T: any) => (checked: boolean) => void;
   className?: string;
   isLoading?: boolean;
 };
 
-export const CheckboxFilterGroup: React.FC<Props> = ({
+export const CheckboxFilterGroup = <T,>({
   title,
   items,
   limit = 5,
@@ -24,7 +24,7 @@ export const CheckboxFilterGroup: React.FC<Props> = ({
   onCheckedChange,
   className,
   isLoading = false,
-}) => {
+}: Props<T>) => {
   const functionalityRequired = items.length > limit;
   const [showAll, setShowAll] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -68,7 +68,8 @@ export const CheckboxFilterGroup: React.FC<Props> = ({
             key={item.text}
             text={item.text}
             value={item.value}
-            onCheckedChange={onCheckedChange?.(item.value as number)}
+            onCheckedChange={onCheckedChange?.(+item.value)}
+            checked={item.checked}
           />
         ))}
         {functionalityRequired && (

@@ -6,21 +6,29 @@ import { Input, RangeSlider } from "../ui";
 import { cn } from "@/lib/utils";
 import { useFilterIngredients, useStoreCheckboxValues } from "@/hooks";
 import qs from "qs";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Props = {
   className?: string;
 };
 
 type PriceProps = {
-  priceFrom: number;
-  priceTo: number;
+  priceFrom?: number;
+  priceTo?: number;
+};
+
+type QueryFilters = PriceProps & {
+  pizzaTypes: string;
+  sizes: string;
+  ingredients: string;
 };
 
 type SizesProps = "10" | "20" | "30";
 type BreadProps = "1" | "2";
 
 export const Filters: React.FC<Props> = ({ className }) => {
+  const searchParams = useSearchParams() as unknown as Map<keyof QueryFilters, string>;
+
   const router = useRouter();
   const [topBarHeight, setTopBarHeight] = useState(0);
   useEffect(() => {
@@ -30,11 +38,36 @@ export const Filters: React.FC<Props> = ({ className }) => {
 
   const { ingredients, isLoading } = useFilterIngredients();
 
-  const [checkedIngredientsIds, toggleIngredient] = useStoreCheckboxValues<number>();
-  const [sizesValues, toggleSizes] = useStoreCheckboxValues<number>();
-  const [breadTypes, toggleBreads] = useStoreCheckboxValues<number>();
+  const [checkedIngredientsIds, toggleIngredient] = useStoreCheckboxValues<number>(
+    searchParams.get("ingredients")
+      ? searchParams
+          .get("ingredients")
+          ?.split(",")
+          .map((idString) => +idString)
+      : []
+  );
+  const [sizesValues, toggleSizes] = useStoreCheckboxValues<number>(
+    searchParams.get("sizes")
+      ? searchParams
+          .get("sizes")
+          ?.split(",")
+          .map((idString) => +idString)
+      : []
+  );
+  const [pizzaTypes, toggleTypes] = useStoreCheckboxValues<number>(
+    searchParams.get("pizzaTypes")
+      ? searchParams
+          .get("pizzaTypes")
+          ?.split(",")
+          .map((idString) => +idString)
+      : []
+  );
 
-  const [price, setPrice] = useState<PriceProps>({ priceFrom: 0, priceTo: 1000 });
+  const [price, setPrice] = useState<PriceProps>({
+    priceFrom: Number(searchParams.get("priceFrom")) || undefined,
+    priceTo: Number(searchParams.get("priceTo")) || undefined,
+  });
+
   function updatePrice(name: keyof PriceProps, value: number) {
     setPrice({
       ...price,
@@ -44,10 +77,10 @@ export const Filters: React.FC<Props> = ({ className }) => {
 
   useEffect(() => {
     const checkedFilters = {
-      prices: price,
-      pizzaTypes: breadTypes,
-      sizes: sizesValues,
-      selectedIngredients: checkedIngredientsIds,
+      ...price,
+      pizzaTypes: Array.from(pizzaTypes),
+      sizes: Array.from(sizesValues),
+      ingredients: Array.from(checkedIngredientsIds),
     };
     const query = qs.stringify(checkedFilters, {
       arrayFormat: "comma",
@@ -55,7 +88,7 @@ export const Filters: React.FC<Props> = ({ className }) => {
     router.push(`?${query}`, {
       scroll: false,
     });
-  }, [checkedIngredientsIds, sizesValues, breadTypes, price]);
+  }, [checkedIngredientsIds, sizesValues, pizzaTypes, price]);
 
   return (
     <div style={{ top: `${topBarHeight + 10}px` }} className={cn(`self-start`, className)}>
@@ -65,19 +98,19 @@ export const Filters: React.FC<Props> = ({ className }) => {
           <CheckboxFilterGroup
             title="Тип теста"
             items={[
-              { text: "Тонкое", value: "1" },
-              { text: "Традиционное", value: "2" },
+              { text: "Тонкое", value: "1", checked: pizzaTypes.includes(1) },
+              { text: "Традиционное", value: "2", checked: pizzaTypes.includes(2) },
             ]}
-            onCheckedChange={toggleBreads}
+            onCheckedChange={toggleTypes}
           />
         </div>
         <div className="flex flex-col gap-4">
           <CheckboxFilterGroup
             title="Размеры"
             items={[
-              { text: "20 cm", value: "20" },
-              { text: "30 cm", value: "30" },
-              { text: "40 cm", value: "40" },
+              { text: "20 cm", value: "20", checked: sizesValues.includes(20) },
+              { text: "30 cm", value: "30", checked: sizesValues.includes(30) },
+              { text: "40 cm", value: "40", checked: sizesValues.includes(40) },
             ]}
             onCheckedChange={toggleSizes}
           />
@@ -107,7 +140,7 @@ export const Filters: React.FC<Props> = ({ className }) => {
             min={0}
             max={1000}
             step={10}
-            value={[price.priceFrom, price.priceTo]}
+            value={[price.priceFrom || 0, price.priceTo || 1000]}
             onValueChange={([from, to]) =>
               setPrice({ priceFrom: from, priceTo: to > 100 ? to : 100 })
             }

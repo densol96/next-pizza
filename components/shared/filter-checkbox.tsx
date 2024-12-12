@@ -4,9 +4,9 @@ import { Checkbox } from "../ui/checkbox";
 export type FilterCheckboxProps = {
   text: string;
   value: string | number;
+  checked: boolean;
   endAdornment?: React.ReactNode;
   onCheckedChange?: (checked: boolean) => void;
-  checked?: boolean;
 };
 
 export const FilterCheckbox: React.FC<FilterCheckboxProps> = ({
@@ -25,7 +25,10 @@ export const FilterCheckbox: React.FC<FilterCheckboxProps> = ({
         className="rounded-[8px] w-6 h-6"
         id={`checkbox-${String(value)}-${text}`}
       />
-      <label htmlFor={`checkbox-${String(value)}-${text}`} className="leading-none cursor-pointer flex-1">
+      <label
+        htmlFor={`checkbox-${String(value)}-${text}`}
+        className="leading-none cursor-pointer flex-1"
+      >
         {text}
       </label>
       {endAdornment}
