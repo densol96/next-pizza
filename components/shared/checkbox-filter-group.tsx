@@ -29,9 +29,7 @@ export const CheckboxFilterGroup = <T,>({
   const [showAll, setShowAll] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
 
-  let displayData = showAll
-    ? items.filter((item) => item.text.toLowerCase().includes(searchValue.toLowerCase().trim()))
-    : items.slice(0, limit);
+  let displayData = showAll ? items.filter((item) => item.text.toLowerCase().includes(searchValue.toLowerCase().trim())) : items.slice(0, limit);
 
   function onClick() {
     if (showAll) setSearchValue("");

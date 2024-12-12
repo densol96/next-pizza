@@ -2,7 +2,7 @@ import { Api } from "@/services/api-client";
 import { Ingredient } from "@prisma/client"
 import { useEffect, useState } from "react"
 
-export function useFilterIngredients(): {ingredients: Ingredient[], isLoading: boolean} {
+export function useIngredients(): {ingredients: Ingredient[], isLoading: boolean} {
     const [ingredients, setIngredients] = useState<Ingredient[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {

@@ -1,12 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Title, FilterCheckbox, CheckboxFilterGroup } from "@/components/shared";
+import { Title, CheckboxFilterGroup } from "@/components/shared";
 import { Input, RangeSlider } from "../ui";
 import { cn } from "@/lib/utils";
-import { useFilterIngredients, useStoreCheckboxValues } from "@/hooks";
-import qs from "qs";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useIngredients, useFilters } from "@/hooks";
 
 type Props = {
   className?: string;
@@ -17,78 +15,15 @@ type PriceProps = {
   priceTo?: number;
 };
 
-type QueryFilters = PriceProps & {
-  pizzaTypes: string;
-  sizes: string;
-  ingredients: string;
-};
-
-type SizesProps = "10" | "20" | "30";
-type BreadProps = "1" | "2";
-
 export const Filters: React.FC<Props> = ({ className }) => {
-  const searchParams = useSearchParams() as unknown as Map<keyof QueryFilters, string>;
-
-  const router = useRouter();
   const [topBarHeight, setTopBarHeight] = useState(0);
   useEffect(() => {
     const el = document.querySelector("#topBar") as Element;
     setTopBarHeight(el.clientHeight);
   }, []);
 
-  const { ingredients, isLoading } = useFilterIngredients();
-
-  const [checkedIngredientsIds, toggleIngredient] = useStoreCheckboxValues<number>(
-    searchParams.get("ingredients")
-      ? searchParams
-          .get("ingredients")
-          ?.split(",")
-          .map((idString) => +idString)
-      : []
-  );
-  const [sizesValues, toggleSizes] = useStoreCheckboxValues<number>(
-    searchParams.get("sizes")
-      ? searchParams
-          .get("sizes")
-          ?.split(",")
-          .map((idString) => +idString)
-      : []
-  );
-  const [pizzaTypes, toggleTypes] = useStoreCheckboxValues<number>(
-    searchParams.get("pizzaTypes")
-      ? searchParams
-          .get("pizzaTypes")
-          ?.split(",")
-          .map((idString) => +idString)
-      : []
-  );
-
-  const [price, setPrice] = useState<PriceProps>({
-    priceFrom: Number(searchParams.get("priceFrom")) || undefined,
-    priceTo: Number(searchParams.get("priceTo")) || undefined,
-  });
-
-  function updatePrice(name: keyof PriceProps, value: number) {
-    setPrice({
-      ...price,
-      [name]: value,
-    });
-  }
-
-  useEffect(() => {
-    const checkedFilters = {
-      ...price,
-      pizzaTypes: Array.from(pizzaTypes),
-      sizes: Array.from(sizesValues),
-      ingredients: Array.from(checkedIngredientsIds),
-    };
-    const query = qs.stringify(checkedFilters, {
-      arrayFormat: "comma",
-    });
-    router.push(`?${query}`, {
-      scroll: false,
-    });
-  }, [checkedIngredientsIds, sizesValues, pizzaTypes, price]);
+  const { ingredients, isLoading } = useIngredients();
+  const { checkedIngredientsIds, toggleIngredient, sizesValues, toggleSizes, pizzaTypes, toggleTypes, price, updatePrice, setPrice } = useFilters();
 
   return (
     <div style={{ top: `${topBarHeight + 10}px` }} className={cn(`self-start`, className)}>
@@ -141,9 +76,7 @@ export const Filters: React.FC<Props> = ({ className }) => {
             max={1000}
             step={10}
             value={[price.priceFrom || 0, price.priceTo || 1000]}
-            onValueChange={([from, to]) =>
-              setPrice({ priceFrom: from, priceTo: to > 100 ? to : 100 })
-            }
+            onValueChange={([from, to]) => setPrice({ priceFrom: from, priceTo: to > 100 ? to : 100 })}
           />
         </div>
         <CheckboxFilterGroup
