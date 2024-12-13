@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "../ui";
 import { ArrowRight, ShoppingCart, User } from "lucide-react";
 import { SearchInput } from "./search-input";
+import Link from "next/link";
 
 type Props = {
   className?: string;
@@ -14,21 +15,16 @@ export const Header: React.FC<Props> = ({ className }) => {
   return (
     <header className={cn("border border-b ", className)}>
       <Container className="flex items-center justify-between py-8">
-        <div className="flex gap-5 items-center">
+        <Link href="/" className="flex gap-5 items-center">
           <Image width={35} height={35} src="/logo.png" alt="Logo"></Image>
           <div>
             <h1 className="text-2xl uppercase font-black">Next Pizza</h1>
-            <p className="text-sm text-gray-400 leading-3">
-              вкусней уже некуда
-            </p>
+            <p className="text-sm text-gray-400 leading-3">вкусней уже некуда</p>
           </div>
-        </div>
+        </Link>
         <SearchInput />
         <div className="flex gap-2">
-          <Button
-            className="flex items-center gap-3 hover:text-neutral-50 hover:bg-primary"
-            variant="outline"
-          >
+          <Button className="flex items-center gap-3 hover:text-neutral-50 hover:bg-primary" variant="outline">
             {/* 16 = w-4 h-4 4*4 */}
             <User size={16} />
             Войти

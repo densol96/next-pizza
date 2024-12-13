@@ -1,5 +1,5 @@
 services:
-  postgress:
+  db:
     image: postgres:13-alpine
     restart: always
     environment:

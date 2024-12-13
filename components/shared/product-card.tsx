@@ -12,27 +12,15 @@ export type Props = {
   className?: string;
 };
 
-export const ProductCard: React.FC<Props> = ({
-  id,
-  name,
-  price,
-  imageUrl,
-  className,
-}) => {
+export const ProductCard: React.FC<Props> = ({ id, name, price, imageUrl, className }) => {
+  console.log("PRICE", price);
   return (
     <div className={className}>
-      <Link href="/product/1">
+      <Link href={`/product/${id}`}>
         <div className="flex justify-center p-6 bg-secondary rounded-lg flex-col">
-          <img
-            className="w-[215px] h-[215px] self-center"
-            src={imageUrl || "/logo.png"}
-            alt="Product image"
-          />
+          <img className="w-[215px] h-[215px] self-center" src={imageUrl || "/logo.png"} alt="Product image" />
           <Title text={name} size="sm" className="mb-1 mt-3 font-bold" />
-          <p className="text-sm text-gray-400">
-            Цыпленок, моцарелла, сыры чеддер и пармезан, сырный соус, томаты,
-            соус альфредо, чеснок
-          </p>
+          <p className="text-sm text-gray-400">Цыпленок, моцарелла, сыры чеддер и пармезан, сырный соус, томаты, соус альфредо, чеснок</p>
           <div className="flex justify-between items-center mt-4">
             <span className="text-[20px]">
               от <b>{price}</b>

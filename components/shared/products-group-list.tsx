@@ -15,13 +15,7 @@ type Props = {
   listClassName?: string;
 };
 
-export const ProductsGroupList: React.FC<Props> = ({
-  title,
-  items,
-  categoryId,
-  className,
-  listClassName,
-}) => {
+export const ProductsGroupList: React.FC<Props> = ({ title, items, categoryId, className, listClassName }) => {
   const intersectionRef = useRef(null);
   //   const intersection = useIntersection();
   const setActiveCategoryId = useCategoryStore((state) => state.setActiveId);
@@ -39,17 +33,17 @@ export const ProductsGroupList: React.FC<Props> = ({
   return (
     <div ref={ref} className={className} id={title}>
       <Title text={title} size="lg" className="font-extrabold mb-5" />
-      <div className={cn("grid grid-cols-3 gap-[50px]", listClassName)}>
+      <ul className={cn("grid grid-cols-3 gap-[50px]", listClassName)}>
         {items.map((product) => (
           <ProductCard
             key={product.id}
             id={product.id}
             name={product.name}
             imageUrl={product.imageUrl}
-            price={product.items?.[0]?.price || product?.prie}
+            price={product.productItems?.[0]?.price || product?.priсe}
           />
         ))}
-      </div>
+      </ul>
     </div>
   );
 };
