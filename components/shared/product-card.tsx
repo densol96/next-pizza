@@ -13,7 +13,6 @@ export type Props = {
 };
 
 export const ProductCard: React.FC<Props> = ({ id, name, price, imageUrl, className }) => {
-  console.log("PRICE", price);
   return (
     <div className={className}>
       <Link href={`/product/${id}`}>
