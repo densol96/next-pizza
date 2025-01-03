@@ -5,7 +5,7 @@ import React from "react";
 
 type Variant = {
   name: string;
-  value: string;
+  value: string | number;
   disabled?: boolean;
 };
 
@@ -25,7 +25,7 @@ export const GroupVariants: React.FC<Props> = ({ className, items, onClick, sele
           key={item.name + "-group-variant"}
           onClick={() => onClick?.(item.value)}
           className={cn("flex items-center justify-center cursor-pointer h-[30px] px-5 flex-1 rounded-3xl transition-all duration-400", {
-            "bg-white shadow": item.value === selectedValue,
+            "bg-white shadow": item.value == selectedValue,
             "text-gray-500 opacity-50 cursor-not-allowed": item.disabled,
           })}
         >

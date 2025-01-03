@@ -17,7 +17,6 @@ type Props = {
 
 export const ProductsGroupList: React.FC<Props> = ({ title, items, categoryId, className, listClassName }) => {
   const intersectionRef = useRef(null);
-  //   const intersection = useIntersection();
   const setActiveCategoryId = useCategoryStore((state) => state.setActiveId);
 
   const { ref, inView, entry } = useInView({

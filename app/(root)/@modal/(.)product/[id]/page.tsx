@@ -12,8 +12,7 @@ export default async function ProductModalPage({ params: { id } }: { params: { i
       productItems: true,
     },
   });
-  console.log(product);
+
   if (!product) return notFound();
   return <ChooseProductModal product={product} />;
-  // return <h1>HELLO WORLD</h1>;
 }

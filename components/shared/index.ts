@@ -11,3 +11,4 @@ export { SearchInput } from "./search-input";
 export * from "./modals";
 export { ChoosePizzaForm } from "./choose-pizza-form";
 export { ChooseProductForm } from "./choose-product-form";
+export { ProductImage } from "./product-image";
